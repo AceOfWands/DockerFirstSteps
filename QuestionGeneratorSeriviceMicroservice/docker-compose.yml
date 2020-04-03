@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+    mysql-service:
+        image: mysql:5
+        container_name: mysql-service 
+        # Uncomment to save data on local file system
+        # volumes:
+        #   - database_vol:/var/lib/mysql/data
+
+        environment:
+            MYSQL_USER: springuser
+            MYSQL_PASSWORD: springpassword
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: customer_service_db
+
+    question-service:
+        image: aceofwands/question_generator_service:0.1
+        # Local Image
+        # image: customer_service_example
+        container_name: question-service
+        ports:
+            - 8080:8080
+            - 4000:4000
+        environment:   
+            db_host: mysql-service
+            db_username: springuser
+            db_pass: springpassword
+            db_database: question_service_db
+            db_port: 3306
+        links:
+        - mysql-service
+        depends_on:
+        - mysql-service
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        environment: 
+            PMA_HOST: mysql-service
+            PMA_PORT: 3306
+            MYSQL_USER: springuser 
+            MYSQL_PASSWORD: springpassword
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: customer_service_db
+        links:
+            - mysql-service
+        depends_on: 
+        - mysql-service
+        ports:
+        #- HOST:CONTAINER
+        - 8081:80
+        - 8443:443
+
+# Uncomment to enable volume creation
+# volumes:
+#   database_vol:
+#     driver_opts:
+#       type: none
+#       device: /home/<path-to-destination>/data
+#       o: bind

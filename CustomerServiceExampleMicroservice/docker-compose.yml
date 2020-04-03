@@ -15,10 +15,7 @@ services:
             MYSQL_DATABASE: customer_service_db
 
     customer-service:
-        # Broken Image
-        # image: f2vnvitale/customer_service_example:0.1
-        # Good Image
-        image: f2vnvitale/customer_service_example:0.2
+        image: aceofwands/customer_service_example:0.1
         # Local Image
         # image: customer_service_example
         container_name: customer-service

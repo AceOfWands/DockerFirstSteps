@@ -1,12 +1,10 @@
-package com.example.model;
+package com.ingsw2.model;
 
 import org.springframework.data.repository.CrudRepository;
-
-import com.example.model.Customer;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
-
+    public Integer countByEmail(String email);
 }
