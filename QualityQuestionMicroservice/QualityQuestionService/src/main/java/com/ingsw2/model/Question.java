@@ -1,5 +1,6 @@
 package com.ingsw2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +12,7 @@ public class Question {
     @Id
     private String code;
 
-
+	@JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private QualityTest qualityTest;
 

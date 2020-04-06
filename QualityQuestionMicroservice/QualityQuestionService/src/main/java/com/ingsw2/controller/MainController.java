@@ -30,21 +30,23 @@ import java.util.List;
 public class MainController {
     @Autowired
     private QualityTestRepository QualityTestRepository;
+    @Autowired
+    private CustomerRepository CustomerRepository;
+    @Autowired
+    private QuestionRepository QuestionRepository;
 	
 	private static JSONObject executeGet(String targetURL) throws IOException {
 
         HttpGet request = new HttpGet(targetURL);
 
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-            CloseableHttpResponse response = httpClient.execute(request)){
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+		CloseableHttpResponse response = httpClient.execute(request);
 
-            HttpEntity entity = response.getEntity();
+		HttpEntity entity = response.getEntity();
 
-            if(entity != null){
-				System.out.println(EntityUtils.toString(entity));
-                return new JSONObject(EntityUtils.toString(entity));
-            }
-        }
+		if(entity != null){
+			return new JSONObject(EntityUtils.toString(entity));
+		}
 
         return null;
 
@@ -77,7 +79,6 @@ public class MainController {
         JSONObject response = null;
         try {
             response = executePost("http://"+System.getenv("customer_domain")+":"+System.getenv("customer_port")+"/ecommerce/customer/exists",urlParameters);
-            System.out.println(response);
             if(response == null)
                 return new ControllerResponse(false,"Service not disponible");
             if(!response.getString("message").equals("Exists"))
@@ -87,12 +88,18 @@ public class MainController {
                 if(responseSeq == null)
                     return new ControllerResponse(false,"Service not disponible");
                 QualityTest qualityTest = new QualityTest();
-                qualityTest.setCustomer(new Customer(email));
+				Customer customer = CustomerRepository.findByEmail(email).orElse(null);
+				if(customer == null)
+					customer = new Customer(email);
+                qualityTest.setCustomer(customer);
                 List<Question> quests = new LinkedList<Question>();
                 JSONArray arr = responseSeq.getJSONArray("data");
                 for (int i = 0; i < arr.length(); i++) {
-                    Question tempQuest = new Question(arr.getString(i));
+                    Question tempQuest = QuestionRepository.findByCode(arr.getString(i)).orElse(null);
+					if(tempQuest == null)
+						tempQuest = new Question(arr.getString(i));
                     tempQuest.setQualityTest(qualityTest);
+					quests.add(tempQuest);
                 }
                 qualityTest.setQuestions(quests);
                 QualityTestRepository.save(qualityTest);

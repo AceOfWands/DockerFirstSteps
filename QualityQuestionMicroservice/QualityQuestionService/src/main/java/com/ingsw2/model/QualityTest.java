@@ -14,7 +14,7 @@ public class QualityTest {
     @OneToMany(mappedBy = "qualityTest", cascade={CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private List<Question> questions;
 
-    @OneToOne
+    @OneToOne(cascade={CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Customer customer;
 
     public QualityTest() {

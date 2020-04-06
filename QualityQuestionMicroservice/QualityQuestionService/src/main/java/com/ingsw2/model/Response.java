@@ -13,6 +13,7 @@ public class Response {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+	@JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Question question;
 
