@@ -1,9 +1,9 @@
-version: "3"
+version: "3.5"
 
 services:
-    mysql-service:
+    mysql-service-customers:
         image: mysql:5
-        container_name: mysql-service 
+        container_name: mysql-service-customers
         # Uncomment to save data on local file system
         # volumes:
         #   - database_vol:/var/lib/mysql/data
@@ -13,44 +13,56 @@ services:
             MYSQL_PASSWORD: springpassword
             MYSQL_ROOT_PASSWORD: example
             MYSQL_DATABASE: customer_service_db
+        healthcheck:
+            test: ["CMD-SHELL", 'mysqladmin status --password=example']
+            interval: 10s
+            timeout: 2s
+            retries: 10
+        networks:
+          - local
 
     customer-service:
         image: aceofwands/customer_service_example:0.1
         # Local Image
         # image: customer_service_example
         container_name: customer-service
+        restart: on-failure
         ports:
-            - 8080:8080
+            #- 8080:8080
             - 4000:4000
         environment:   
-            db_host: mysql-service
+            db_host: mysql-service-customers
             db_username: springuser
             db_pass: springpassword
             db_database: customer_service_db
             db_port: 3306
+            server_port: 4000
         links:
-        - mysql-service
+            - mysql-service-customers
         depends_on:
-        - mysql-service
+            - mysql-service-customers
+        networks:
+          - local
+          - outside
 
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        restart: always
-        environment: 
-            PMA_HOST: mysql-service
-            PMA_PORT: 3306
-            MYSQL_USER: springuser 
-            MYSQL_PASSWORD: springpassword
-            MYSQL_ROOT_PASSWORD: example
-            MYSQL_DATABASE: customer_service_db
-        links:
-            - mysql-service
-        depends_on: 
-        - mysql-service
-        ports:
-        #- HOST:CONTAINER
-        - 8081:80
-        - 8443:443
+    # phpmyadmin:
+        # image: phpmyadmin/phpmyadmin
+        # restart: always
+        # environment: 
+            # PMA_HOST: mysql-service-customers
+            # PMA_PORT: 3306
+            # MYSQL_USER: springuser 
+            # MYSQL_PASSWORD: springpassword
+            # MYSQL_ROOT_PASSWORD: example
+            # MYSQL_DATABASE: customer_service_db
+        # links:
+            # - mysql-service-customers
+        # depends_on: 
+            # - mysql-service-customers
+        # ports:
+        # #- HOST:CONTAINER
+            # - 8081:80
+            # - 8443:443
 
 # Uncomment to enable volume creation
 # volumes:
@@ -59,3 +71,8 @@ services:
 #       type: none
 #       device: /home/<path-to-destination>/data
 #       o: bind
+
+networks:
+    local:
+    outside:
+        name: ecommerce_default
