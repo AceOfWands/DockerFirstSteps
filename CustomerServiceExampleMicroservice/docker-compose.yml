@@ -31,6 +31,7 @@ services:
             #- 8080:8080
             - 4000:4000
         environment:   
+            WAIT_HOSTS: mysql-service-customers:3306
             db_host: mysql-service-customers
             db_username: springuser
             db_pass: springpassword
