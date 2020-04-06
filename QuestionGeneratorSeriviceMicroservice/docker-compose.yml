@@ -31,6 +31,7 @@ services:
             #- 8081:8080
             - 4001:4000
         environment:   
+            WAIT_HOSTS: mysql-service-questions:3306
             db_host: mysql-service-questions
             db_username: springuser
             db_pass: springpassword
