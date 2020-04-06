@@ -1,5 +1,10 @@
 package com.ingsw2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,8 +14,18 @@ public class Response {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @Expose(serialize = false, deserialize = false)
+    @JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Question question;
+
+    private String text;
+
+    public Response() {}
+
+    public Response(String text) {
+        this.text = text;
+    }
 
     public Integer getId() {
         return id;
@@ -26,5 +41,13 @@ public class Response {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

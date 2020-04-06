@@ -1,0 +1,14 @@
+[
+	{
+		"code":"A0001",
+		"text":"Riesci a vedere questa domanda?",
+		"responses":[
+			{
+				"text": "Si"
+			},
+			{
+				"text": "No"
+			}
+		]
+	}
+]

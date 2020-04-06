@@ -1,5 +1,7 @@
 package com.ingsw2.model;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -7,36 +9,47 @@ import java.util.List;
 @Entity
 public class Question {
 
-  @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
-  private Integer id;
+    @Id
+    private String code;
 
-  private String text;
+    private String text;
 
-  @OneToMany(mappedBy = "question")
-  private List<Response> responses;
+    @OneToMany(mappedBy = "question", cascade={CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    private List<Response> responses;
 
-  public Integer getId() {
-    return id;
-  }
+    public Question() {
+        this.code = null;
+        this.text = null;
+        this.responses = null;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public Question(String code, String text, List<Response> responses) {
+        this.code = code;
+        this.text = text;
+        this.responses = responses;
+    }
 
-  public String getText() {
-    return text;
-  }
+    public String getCode() {
+        return code;
+    }
 
-  public void setText(String text) {
-    this.text = text;
-  }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-  public List<Response> getResponses() {
-    return responses;
-  }
+    public String getText() {
+        return text;
+    }
 
-  public void setResponses(List<Response> responses) {
-    this.responses = responses;
-  }
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public List<Response> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<Response> responses) {
+        this.responses = responses;
+    }
 }
