@@ -1,0 +1,82 @@
+version: "3.5"
+
+services:
+    mysql-service-quality:
+        image: mysql:5
+        container_name: mysql-service-quality
+        # Uncomment to save data on local file system
+        # volumes:
+        #   - database_vol:/var/lib/mysql/data
+
+        environment:
+            MYSQL_USER: springuser
+            MYSQL_PASSWORD: springpassword
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: quality_service_db
+        healthcheck:
+            test: ["CMD-SHELL", 'mysqladmin status --password=example']
+            interval: 10s
+            timeout: 2s
+            retries: 10
+        networks:
+          - local
+
+    quality-service:
+        image: aceofwands/quality_question_service:0.1
+        # Local Image
+        container_name: quality-service
+        restart: on-failure
+        ports:
+            #- 8082:8080
+            - 4002:4000
+        environment:   
+            db_host: mysql-service-quality
+            db_username: springuser
+            db_pass: springpassword
+            db_database: quality_service_db
+            db_port: 3306
+            server_port: 4000
+            customer_domain: customer-service
+            customer_port: 4000
+            question_domain: question-service
+            question_port: 4001
+        links:
+            - mysql-service-quality
+        external_links:
+            - customer-service
+            - question-service
+        networks:
+          - local
+          - outside
+
+    # phpmyadmin:
+        # image: phpmyadmin/phpmyadmin
+        # restart: always
+        # environment: 
+            # PMA_HOST: mysql-service-quality
+            # PMA_PORT: 3306
+            # MYSQL_USER: springuser 
+            # MYSQL_PASSWORD: springpassword
+            # MYSQL_ROOT_PASSWORD: example
+            # MYSQL_DATABASE: quality_service_db
+        # links:
+            # - mysql-service-quality
+        # depends_on: 
+            # - mysql-service-quality
+        # ports:
+        # #- HOST:CONTAINER
+            # - 8081:80
+            # - 8443:443
+
+# Uncomment to enable volume creation
+# volumes:
+#   database_vol:
+#     driver_opts:
+#       type: none
+#       device: /home/<path-to-destination>/data
+#       o: bind
+
+networks:
+    local:
+    outside:
+        name: ecommerce_default
