@@ -1,0 +1,22 @@
+user nginx;
+worker_processes 1;
+error_log nginx_error.log;
+events {}
+http {
+	include /etc/nginx/mime.types;
+	sendfile on;
+    server {
+        listen ${NGINX_PORT};
+        location / {
+            root /usr/share/nginx/html/;
+			sub_filter_types application/javascript;
+			sub_filter "NGINX_REPLACE_CUSTOMER_DOMAIN" "${CUSTOMER_DOMAIN}";
+			sub_filter "NGINX_REPLACE_CUSTOMER_PORT" "${CUSTOMER_PORT}";
+			sub_filter "NGINX_REPLACE_QUESTION_DOMAIN" "${QUESTION_DOMAIN}";
+			sub_filter "NGINX_REPLACE_QUESTION_PORT" "${QUESTION_PORT}";
+			sub_filter "NGINX_REPLACE_QUALITY_DOMAIN" "${QUALITY_DOMAIN}";
+			sub_filter "NGINX_REPLACE_QUALITY_PORT" "${QUALITY_PORT}";
+			sub_filter_once off;
+        }
+    }
+}

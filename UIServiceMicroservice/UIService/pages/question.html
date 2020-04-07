@@ -1,0 +1,55 @@
+      <!-- Your main view, should have "view-main" class -->
+      <div class="view view-main">
+        <!-- Initial Page, "data-name" contains page name -->
+        <div data-name="question" class="page">
+
+          <!-- Top Navbar -->
+			<div class="navbar">
+				<div class="navbar-inner sliding">
+				  <div class="left">
+					<a href="app://module/ecommerce/prevQuestion" class="link">
+					  <i class="icon icon-back"></i>
+					  <span class="ios-only">Indietro</span>
+					</a>
+				  </div>
+				  <div class="title time-text">Ecommerce Test</div>
+				</div>
+			</div>
+
+          <!-- Scrollable page content -->
+          <div class="page-content">
+			<div class="block-title">N. {{pageData.question.code}}</div>
+			<!-- Inset content block -->
+			<div class="block block-strong question-block inset" data-qid="{{pageData.question.code}}">
+			  <p class="text-align-center">{{pageData.question.text}}</p>
+			  {{#pageData.question.responses}}				
+				<div class="block row">
+				  <button class="button quiz-response" data-id="{{id}}">{{text}}</button>
+				</div>
+			  {{/pageData.question.responses}}
+			</div>
+			<div class="block-footer text-align-right">{{pageData.question.currentQuestion}}/{{pageData.question.tot_questions}}</div>
+          </div>
+        </div>
+    </div>
+<script>
+document.addEventListener('pageready',function(){
+	$$('.quiz-response').click((e)=>{
+		framework7.preloader.show();
+		defaultConnector.request(new BobbleHead.ConnectorRequest('get','app://module/ecommerce/toggleResponse',{'id': $$(e.target).data('id'), 'question': $$('.question-block').data('qid')}));
+		defaultConnector.request(new BobbleHead.ConnectorRequest('post','app://module/ecommerce/nextQuestion'))
+			.then((r)=>{
+				framework7.preloader.hide();
+				if(r)
+					pageBuilder.buildPage(2, {question:r});
+				else
+					pageBuilder.buildPage(3);
+			}).catch(()=>{
+				framework7.preloader.hide();
+				framework7.toast.show({
+					text: 'Errore di comunicazione'
+				});
+			});
+	});
+});
+</script>

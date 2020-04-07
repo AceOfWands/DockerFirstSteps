@@ -1,0 +1,72 @@
+    <!-- Statusbar overlay -->
+    <div class="statusbar"></div>
+
+      <!-- Your main view, should have "view-main" class -->
+      <div class="view view-main">
+        <!-- Initial Page, "data-name" contains page name -->
+        <div data-name="welcome" class="page">
+			<div class="page-content">
+				<div class="block-title block-title-large text-align-center">Benvenuto</div>
+				<div class="block-header text-align-center">Inserisci le tue informazioni</div>
+				<div class="list row justify-content-center no-hairlines">
+				  <form action="#">
+				  <ul class="col-75">
+					<li class="item-content item-input">
+					  <div class="item-inner">
+						<div class="item-input-wrap">
+						  <input type="email" name="email" class="text-align-center" placeholder="La tua mail" required>
+						</div>
+					  </div>
+					</li>
+					<li class="item-content item-input">
+					  <div class="item-inner">
+						<div class="item-input-wrap">
+						  <input type="text" name="name" class="text-align-center" placeholder="Il tuo nome" required>
+						</div>
+					  </div>
+					</li>
+					<li class="item-content">
+					  <div class="item-inner">
+						<div class="item-input-wrap">
+						  <input type="submit" class="button go" value="Vai al questionario">
+						</div>
+					  </div>
+					</li>
+				  </ul>
+				  </form>
+				</div>
+			</div>
+        </div>
+    </div>
+	<script>
+		document.addEventListener('pageready',()=>{
+			$$('.go').click(()=>{
+				let data = new FormData();
+				if($$('form')[0].checkValidity()){
+					data.set('email', $$('input[name="email"]').val());
+					data.set('name', $$('input[name="name"]').val());
+					framework7.preloader.show();
+					defaultConnector.request(new BobbleHead.ConnectorRequest('post','app://module/ecommerce/getTest', data))
+						.then(()=>{
+							defaultConnector.request(new BobbleHead.ConnectorRequest('post','app://module/ecommerce/nextQuestion'))
+								.then((r)=>{
+									framework7.preloader.hide();
+									pageBuilder.buildPage(2, {question:r});
+								}).catch(()=>{
+									framework7.preloader.hide();
+									framework7.toast.show({
+										text: 'Errore di comunicazione'
+									});
+								});
+						})
+						.catch(()=>{
+							framework7.preloader.hide();
+							framework7.toast.show({
+								text: 'Errore di comunicazione'
+							});
+						});
+				}else
+					$$('form')[0].reportValidity();
+			});
+		},true);
+	</script>

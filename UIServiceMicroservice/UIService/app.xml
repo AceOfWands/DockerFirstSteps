@@ -1,0 +1,24 @@
+<configuration>
+	<version>0.0.1</version>
+	<container>app-content</container>
+	<pageBuilder>Framework7Module_PageBuilder</pageBuilder>
+	<pages path="./pages/">
+		<index vid="1" />
+		<page vid="1" noback="true" keepLive="true" allowDuplicate="false" path="welcome.html" />
+		<page vid="2" noback="false" keepLive="true" allowDuplicate="true" path="question.html" />
+		<page vid="3" noback="false" keepLive="false" allowDuplicate="false" path="thanks.html" />
+	</pages>
+	<modules path="./modules/">
+		<module path="framework7/main.js" enabled="true" permissions="pages,models">
+			<configuration>
+				<root>#app-content</root>
+				<appid>com.ingsw2.EcommerceUI</appid>
+				<appname>Ecommerce Test</appname>
+			</configuration>
+		</module>
+		<module path="ecommerce/main.js" enabled="true">
+			<configuration>
+			</configuration>
+		</module>
+	</modules>
+</configuration>

@@ -1,0 +1,20 @@
+:root{
+	--f7-font-family: 'Montserrat', sans-serif !important;
+}
+img{
+	width: 100%;
+}
+
+.page[data-name="welcome"] ul{
+	max-width: 500px;
+}
+
+.page[data-name="welcome"] .page-content>div:first-child,
+.page[data-name="thanks"] .page-content>div:first-child{
+	margin-top: 30vh;
+}
+
+.page[data-name="question"] .page-content>div{
+	max-width: 800px;
+	margin-left: calc((100% - 800px)/2)
+}
