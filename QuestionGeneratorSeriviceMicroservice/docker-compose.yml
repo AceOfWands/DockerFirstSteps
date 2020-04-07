@@ -43,6 +43,8 @@ services:
             - mysql-service-questions
         depends_on:
             - mysql-service-questions
+        volumes:
+            - ./questions.json:/home/app/questions.json
         networks:
           - local
           - outside

@@ -1,0 +1,29 @@
+[
+	{
+		"code":"A0001",
+		"text":"Riesci a vedere questa domanda?",
+		"responses":[
+			{
+				"text": "Si"
+			},
+			{
+				"text": "No"
+			}
+		]
+	},
+	{
+		"code":"A0002",
+		"text":"E quest'altra?",
+		"responses":[
+			{
+				"text": "Anche"
+			},
+			{
+				"text": "Continuo a non vedere"
+			},
+			{
+				"text": "Questa no"
+			}
+		]
+	}
+]
