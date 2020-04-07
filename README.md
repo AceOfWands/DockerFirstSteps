@@ -6,6 +6,7 @@
 You need a Maven installation. Run
 
 ```
+cd < Microservice directory >
 mvn clean package
 ```
 
