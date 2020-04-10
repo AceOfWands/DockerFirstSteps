@@ -54,6 +54,7 @@ public class QuestionGeneratorServiceApplication extends SpringBootServletInitia
 			}
 			if(quests != null) {
 				this.QuestionRepository.saveAll(quests);
+				
 				/*FileWriter dumpFile = new FileWriter(System.getenv("quests_file"));
 				dumpFile.write(gson.toJson(this.QuestionRepository.findAll()));
 				dumpFile.close();*/
